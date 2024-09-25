@@ -1,0 +1,221 @@
+html {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background-color: white;
+}
+
+body {
+    display: flex;
+    align-self: center;
+    font-family: Inter, sans-serif;
+    color: white;
+    overflow: hidden;
+    margin: 0;
+}
+
+.description{
+    color:black;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-content: center;
+    width: 600px;
+}
+.descriptionAndUI{
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper {
+    background: center no-repeat url("img/night.png");
+    background-size: 600px 600px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border: none;
+}
+
+.UI {
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 600px;
+    align-self: center;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border: none;
+}
+
+.Input {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 2em;
+}
+#angleInput{
+    display:none
+}
+#startPosition{
+    display:none
+}
+
+.world {
+    width: 240px;
+    height: 240px;
+    opacity: 60%;
+    border-radius: 50%;
+    position: absolute;
+    /*overflow: hidden;*/
+    /*background-color: lightblue;*/
+    background: url("img/globelight.png");
+    background-size: cover;
+    align-self: center;
+    margin-top: 11em;
+}
+
+.minute-mark {
+    position: absolute;
+    width: 2px;
+    height: 4px;
+    background-color: rgba(0, 0, 0, 0.6);
+    transform-origin: 0 0px; /* Das Zentrum des Kreises */
+    left: 50%;
+    top: 50%;
+}
+
+.hour-mark {
+    position: absolute;
+    width: 2px;
+    height: 12px;
+    background-color: #ff0000;
+    transform-origin: 0 0px; /* Das Zentrum des Kreises */
+    left: 50%;
+    top: 50%;
+}
+
+.ring {
+    background-image: url("img/ring.svg");
+    background-size: cover;
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: 300px;
+    height: 300px;
+}
+
+.sun-moon {
+    display: none; /* Start ohne Sichtbarkeit bei 0 grad */
+    background-image: url("img/moon.png"); /* Initiales Bild bei 0 grad */
+    background-size: cover;
+    position: absolute;
+    transform-origin: 0 0px; /* Das Zentrum des Kreises */
+    transform: matrix(0.992546, -0.121869, 0.121869, 0.992546, -26.8113, -218.36) rotate(-7deg); /*Initiale Position*/
+    width: 60px;
+    height: 60px;
+    left: 50%;
+    top: 50%;
+}
+
+
+.slice {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(252, 196, 78, 0.5);
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%); /* Start ohne Sichtbarkeit bei 0 grad */
+    /*transform:rotate(45deg);*/
+    cursor: pointer;
+}
+
+.icon-grab {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: url("img/grab.png") no-repeat center center;
+    background-size: contain;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* Stellt sicher, dass das Hover über den Slice und nicht über das Icon selbst erkannt wird => verhindert flackern*/
+    cursor: pointer;
+}
+
+.icon-grab:hover {
+    cursor: pointer;
+}
+.slice:hover .icon-grab {
+    display: block; /* oder 'flex', je nach Bedarf */
+}
+
+.start_end {
+    border: rgba(255,255,255,0.25) solid 1px;
+    border-radius: 15px;
+    background-color: rgba(255,255,255,0.2);
+    display: grid;
+    grid-template-columns: 2fr;
+    justify-content: center;
+    align-content: center;
+    width: 10em;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+}
+
+.start_end p {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    padding-left: 1em;
+}
+
+.start_end span {
+    grid-column: 2 / 3;
+    grid-row: 1;
+    padding-right: 1em;
+    align-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.duration {
+    margin-top: 1em;
+    border: rgba(255,255,255,0.25) solid 1px;
+    border-radius: 15px;
+    background-color: rgba(255,255,255,0.2);
+    display: grid;
+    grid-template-columns: 2fr;
+    justify-content: center;
+    align-content: center;
+    width: 14em;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+}
+
+.duration p {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    padding-left: 1em;
+}
+
+.duration input {
+    width: 5rem !important; /* Tut mir Leid! */
+    height: 1.5rem;
+    font-size: 1rem;
+    grid-column: 2 / 3;
+    grid-row: 1;
+    margin-top: 0.65rem !important; /* Tut mir Leid! */
+    margin-right: 1rem;
+    top: -20px;
+    font-family: Inter, sans-serif;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    background-color: rgba(255,255,255,0.25);
+    border-radius: 20px;
+}

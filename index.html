@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Timerange</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+<div class="descriptionAndUI">
+<div class="description">
+<div>
+    <h1>UI - Timerange</h1>
+</div>
+<div>
+    <p>Enter a "Duration" to see the timerange on the globe, and change start and end by dragging the slice.</p>
+</div>
+</div>
+
+<div class="wrapper">
+    <div class="UI">
+        <div>
+            <input type="number" id="angleInput" placeholder="Grad (0-360 Grad)" min="0" max="360" style="width: 8rem;"/>
+            <input type="number" id="startPosition" placeholder="Startwinkel (0-360 Grad)" min="0" max="360" style="width: 8rem;"/>
+        </div>
+        <div class="duration">
+            <p>DURATION:  </p>
+            <input type="time" id="timeInput" placeholder="Zeit (HH:MM)" style="width: 8rem; margin-top: 1em;"/>
+        </div>
+        <div class="start_end">
+            <p>START: </p><span id="startTime">00:00</span>
+        </div>
+        <div class="start_end">
+            <p>END: </p><span id="endTime">00:00</span>
+        </div>
+
+        <div class="world">
+            <div class="ring"></div>
+            <div class="slice"></div>
+            <div class="icon-grab"></div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+<script>
+    const clock = document.querySelector('.world');
+
+    // pro Stunde fünf kleine Markierungen
+    for (let i = 0; i < 120; i++) {
+        let mark = document.createElement('div');
+        mark.className = 'minute-mark';
+        // Berechnet den Winkel und setzt die Rotation
+        let angle = i * 3;
+        mark.style.transform = `rotate(${angle}deg) translateY(-132px)`;
+        clock.appendChild(mark);
+    }
+
+    // pro Stunde eine grosse Markierung
+    for (let i = 0; i < 24; i++) {
+        let mark = document.createElement('div');
+        mark.className = 'hour-mark';
+        // Berechnet den Winkel und setzt die Rotation
+        let angle = i * 15;
+        mark.style.transform = `rotate(${angle}deg) translateY(-132px)`;
+        clock.appendChild(mark);
+    }
+
+    // Sonne und Mond platzieren
+    const orbiter = document.createElement('div');
+    orbiter.className = 'sun-moon';
+    // Berechnet den Winkel und setzt die Rotation
+    let angle = document.getElementById('startPosition').value;
+    orbiter.style.transform = `rotate(${angle-7}deg) translateY(-220px)`;
+    clock.appendChild(orbiter);
+
+    // angle input-------------------------------------
+    document.getElementById('angleInput').addEventListener('input', function () {
+        const angle = Math.min(Math.max(0, this.value), 360); // Begrenzt die Eingabe auf Werte zwischen 0 und 360
+        const slice = document.querySelector('.slice');
+
+        if (angle <= 0) {
+            slice.style.opacity = 0; // Unsichtbar machen, wenn der Winkel 0 ist
+        } else {
+            const slicePercentage = angle / 360;
+            slice.style.opacity = 1; // Sorgt dafür, dass das Kuchenstück sichtbar ist
+
+            // Berechnet den Clip-Pfad abhängig vom Winkel
+            slice.style.clipPath = `polygon(50% 50%, ${calculateClipPath(angle)})`;
+        }
+    });
+
+    // Startwinkel input-------------------------------------
+    document.getElementById('startPosition').addEventListener('input', function () {
+        const angle = Math.min(Math.max(0, this.value), 360); // Begrenzt die Eingabe auf Werte zwischen 0 und 360
+        const slice = document.querySelector('.slice');
+
+        slice.style.transform = `rotate(${angle}deg)`;
+    });
+    //----------------------------------------------------------
+
+    // Funktion zum Aktualisieren des Hintergrundbilds basierend auf dem Startwinkel
+    function updateBackground(startPosition) {
+        const wrapper = document.querySelector('.wrapper');
+        // const body = document.body;
+        console.log("startPosition: " + startPosition);
+
+        if (startPosition >= 0 && startPosition < 90) {
+            wrapper.style.background = 'center no-repeat url("img/night.png")';
+            wrapper.style.backgroundSize = '600px 600px';
+        } else if (startPosition >= 90 && startPosition < 180) {
+            wrapper.style.background = 'center no-repeat url("img/morning.png")';
+            wrapper.style.backgroundSize = '600px 600px';
+        } else if (startPosition >= 180 && startPosition < 270) {
+            wrapper.style.background = 'center no-repeat url("img/day.png")';
+            wrapper.style.backgroundSize = '600px 600px';
+        } else if (startPosition >= 270 && startPosition < 359) {
+            wrapper.style.background = 'center no-repeat url("img/evening.png")';
+            wrapper.style.backgroundSize = '600px 600px';
+        } else {
+            wrapper.style.background = 'center no-repeat url("img/night.png")';
+            wrapper.style.backgroundSize = '600px 600px';
+        }
+    }
+
+    function updateOrbiter(startPosition) {
+        const orbiter = document.querySelector('.sun-moon');
+        orbiter.style.transform = `rotate(${startPosition-7}deg) translateY(-220px)`;
+
+        if (startPosition >= 0 && startPosition < 90) {
+            orbiter.style.backgroundImage = 'url("img/moon.png")';
+        } else if (startPosition >= 90 && startPosition < 270) {
+            orbiter.style.backgroundImage = 'url("img/sun.png")';
+        } else if (startPosition >= 270 && startPosition < 360) {
+            orbiter.style.backgroundImage = 'url("img/moon.png")';
+        }
+    }
+
+    function updateSlice(angle) {
+        const slice = document.querySelector('.slice');
+        if (angle <= 0) {
+            // Unsichtbar machen, wenn der Winkel 0 ist
+            orbiter.style.display = 'none';
+            slice.style.display = 'none';
+        } else {
+            // Sichtbar machen
+            slice.style.display = 'flex';
+            orbiter.style.display = 'block';
+            // Berechnet den Clip-Pfad abhängig vom Winkel
+            slice.style.clipPath = `polygon(50% 50%, ${calculateClipPath(angle)})`;
+        }
+    }
+
+    //binded die input felder------------------------------------------------------------------------
+    document.getElementById('angleInput').addEventListener('input', updateFromInputs);
+    document.getElementById('startPosition').addEventListener('input', updateFromInputs);
+    document.getElementById('timeInput').addEventListener('change', function () {
+        const [hours, minutes] = this.value.split(':').map(num => parseInt(num, 10));
+        if (!isNaN(hours) && !isNaN(minutes)) {
+            document.getElementById('angleInput').value = hours * 15 + minutes * 0.25; // Aktualisiert den Winkel basierend auf der Zeit
+            const startPosition = parseFloat(document.getElementById('startPosition').value); // Wert des Startwinkel-Eingabefelds lesen
+            updateFromInputs();
+            updateBackground(startPosition); // Funktion aufrufen, um das Hintergrundbild zu aktualisieren
+        }
+    });
+
+    //--------------------------------------------------------------------------
+
+    //berechnet den clippath für das slice---------------------------------------
+
+    /*  Die calculateClipPath Funktion berechnet den Pfad für das Polygon, das den Clip-Path für das Kuchenstück bildet.
+
+        steps gibt an, wie viele Punkte entlang des Bogens berechnet werden, um eine glatte Kurve zu erzeugen. (umso mehr => umso glatter aber umso rechenintensiver.)
+
+        Innerhalb der for-Schleife:
+        theta ist der Winkel in Grad für jeden dieser Schritte des Bogens, beginnend bei -90 Grad (das ist der Startpunkt oben auf dem Kreis).
+        x und y sind die Koordinaten jedes Punktes auf dem Bogen, berechnet mit der Kosinus- und Sinusfunktion.
+
+        Nach der Schleife wird der letzte Punkt hinzugefügt, um das Polygon zu schließen, indem wieder auf das Zentrum des Kreises gezeigt wird.
+        Die Funktion gibt dann diesen Pfad als Zeichenkette zurück, die in der clip-path-Eigenschaft des Kuchenstücks verwendet wird.*/
+
+    function calculateClipPath(angle) {
+        let path = "";
+        const steps = 100; // Anzahl der Schritte für den Bogen. wichtig damit das kuchenstück bis zum umfang des kresises ausgefüllt wird.
+        const centerX = 50; // Zentrum des Kreises in Prozent
+        const centerY = 50; // Zentrum des Kreises in Prozent
+
+        for (let step = 0; step <= steps; step++) {
+            const theta = (angle / steps) * step - 90; // Startet bei -90 Grad, um oben auf dem Kreis zu beginnen
+            const x = centerX + 50 * Math.cos((Math.PI * theta) / 180);
+            const y = centerY + 50 * Math.sin((Math.PI * theta) / 180);
+            path += `${x}% ${y}%, `;
+        }
+
+        // Fügt den Anfangspunkt hinzu, um das Polygon zu schließen
+        path += `50% 50%`;
+        // console.log(path);
+        return path;
+    }
+
+    //grab icon anzeigen---------------------------------------
+    const slice = document.querySelector('.slice');
+    const iconGrab = document.querySelector('.icon-grab'); // Referenz zum Icon-Element
+
+    // Event-Listener, um die Rotation zu starten, wenn die Maus auf das Slice klickt
+    slice.addEventListener('mousedown', () => {
+        document.addEventListener('mousemove', rotateSlice);
+    });
+
+    // Event-Listener, um die Rotation zu stoppen, wenn die Maus losgelassen wird
+    document.addEventListener('mouseup', () => {
+        document.removeEventListener('mousemove', rotateSlice);
+    });
+
+    // Zeigt das Icon, wenn cursor über das Slice kommt
+    slice.addEventListener('mouseenter', () => {
+        iconGrab.style.display = 'flex';
+    });
+
+    // Versteckt das Icon, wenn die Maus das Slice verlässt
+    slice.addEventListener('mouseleave', () => {
+        iconGrab.style.display = 'none';
+    });
+
+    // Funktion zum Drehen des Slices basierend auf der Mausposition
+    function rotateSlice(event) {
+        const rect = clock.getBoundingClientRect();
+        const clockCenterX = rect.left + rect.width / 2;
+        const clockCenterY = rect.top + rect.height / 2;
+        const mouseX = event.clientX - clockCenterX;
+        const mouseY = event.clientY - clockCenterY;
+
+        // Berechnung des Winkels des Mauszeigers relativ zum Mittelpunkt des Kreises
+        let radians = Math.atan2(mouseY, mouseX);
+        let degrees = radians * (180 / Math.PI);
+
+        // Konvertiere negative Winkel in positive Winkel im Bereich von 0 bis 360 Grad
+        if (degrees < 0) {
+            degrees = 360 + degrees;
+        }
+
+        // Rotation des Slices über CSS transform
+        slice.style.transformOrigin = 'center'; // Setze den Ursprung der Transformation auf das Zentrum des Slices
+        slice.style.transform = `rotate(${degrees}deg)`;
+
+        // Startwinkelfeld aktualisieren
+        document.getElementById('startPosition').value = Math.round(degrees);
+
+        // Update der Startzeit basierend auf dem neuen Startwinkel
+        updateFromInputs();
+
+        const startPosition = parseFloat(document.getElementById('startPosition').value); // Wert des Startwinkel-Eingabefelds lesen
+        const angle = Math.floor(parseFloat(document.getElementById('angleInput').value)) || 0;
+        updateBackground(startPosition); // Funktion aufrufen, um das Hintergrundbild zu aktualisieren
+        updateOrbiter(startPosition); // Funktion aufrufen, um Sonne/Mond aktualisieren
+        updateIconPosition(angle);  // Position des Grab-Icons aktualisieren, um dem Slice zu folgen
+
+    }
+
+
+    function updateIconPosition(angle) {
+        console.log("updateIconPosition " + angle)
+        // Wert des Startwinkel-Eingabefelds lesen
+        const startPosition = parseFloat(document.getElementById('startPosition').value);
+        let middleAngle = angle /2;
+        // Der Winkel, der für die Positionierung des Icons verwendet wird, sollte der Mittelwert des Slices sein.
+        if (startPosition) {
+            middleAngle = (angle /2) + startPosition;
+        }
+
+        // Umrechnung des mittleren Winkels von Grad in Bogenmaß
+        const radian = (middleAngle - 90) * (Math.PI / 180);
+
+        // Berechnet die x- und y-Position innerhalb des Slices
+        const radius = clock.offsetWidth / 2; // Verwende den Radius des Kreises
+        const iconRadius = radius * 0.6; // Setze das Icon etwas innerhalb des Randes, hier bei 50% des Radius
+
+        // Berechnet die x- und y-Koordinaten für das Icon
+        const iconX = (clock.offsetWidth / 2) + iconRadius * Math.cos(radian);
+        const iconY = (clock.offsetHeight / 2) + iconRadius * Math.sin(radian);
+
+        // Aktualisiere die Position des Icons
+        iconGrab.style.left = `${iconX}px`;
+        iconGrab.style.top = `${iconY}px`;
+        // iconGrab.style.transform = 'translate(-50%, -50%)';
+    }
+
+    //--------------------------------------------------------------
+
+    //start und endzeit updaten---------------------------------------
+    function updateFromInputs() {
+        const angle = Math.floor(parseFloat(document.getElementById('angleInput').value)) || 0;
+        const rotation = Math.floor(parseFloat(document.getElementById('startPosition').value)) || 0;
+        // console.log("Inputs: " + angle + " " + rotation);
+        updateSlice(angle);
+        updateIconPosition(angle);
+
+        // Berechnet die Endzeit basierend auf dem Startwinkel und der Dauer
+        const startTotalMinutes = (rotation / 360) * 1440; // Startzeit ist 00:00, also 0 Minuten nach Mitternacht
+        const durationMinutes = (angle / 360) * 1440; // Umwandlung des Winkels in Minuten (360 Grad entsprechen 1440 Minuten, also einem ganzen Tag)
+        const endTotalMinutes = startTotalMinutes + durationMinutes;
+
+        const startHours = Math.floor(startTotalMinutes / 60);
+        const startMinutes = Math.floor(startTotalMinutes % 60);
+        const endHours = Math.floor(endTotalMinutes / 60) % 24; // Verwendet Modulo 24, um sicherzustellen, dass die Stunden nicht über 24 hinausgehen
+        const endMinutes = Math.floor(endTotalMinutes % 60);
+
+        // Aktualisiert die Anzeige der Start- und Endzeiten
+        document.getElementById('startTime').textContent = `${startHours.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
+        document.getElementById('endTime').textContent = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+        // document.getElementById('timeInput').value = `${timeHours.toString().padStart(2, '0')}:${timeMinutes.toString().padStart(2, '0')}`;
+    }
+
+    //-------------------------------------------------------------------------
+</script>
+
+</body>
+</html>
