@@ -37,6 +37,7 @@ body {
     -moz-border-radius: 20px;
     border-radius: 20px;
     border: none;
+    transition: background-image 1s ease-in-out, background-size 1s ease-in-out;
 }
 
 .UI {
