@@ -27,6 +27,7 @@ body {
 .descriptionAndUI{
     display: flex;
     flex-direction: column;
+    zoom: 0.9;
 }
 
 .wrapper {
