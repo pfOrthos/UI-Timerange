@@ -101,7 +101,7 @@ body {
 }
 
 .ring {
-    background-image: url("img/ring.svg");
+    background-image: url("img/ring_bright.svg");
     background-size: cover;
     position: absolute;
     top: -30px;
