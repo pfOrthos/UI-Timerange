@@ -99,6 +99,8 @@
     });
     //----------------------------------------------------------
 
+    const ring       = document.querySelector('.ring');
+
     // Funktion zum Aktualisieren des Hintergrundbilds basierend auf dem Startwinkel
     function updateBackground(startPosition) {
         const wrapper = document.querySelector('.wrapper');
@@ -108,18 +110,23 @@
         if (startPosition >= 0 && startPosition < 90) {
             wrapper.style.background = 'center no-repeat url("img/night.png")';
             wrapper.style.backgroundSize = '600px 600px';
+            ring.style.backgroundImage         = 'url("../img/ring_bright.svg")';
         } else if (startPosition >= 90 && startPosition < 180) {
             wrapper.style.background = 'center no-repeat url("img/morning.png")';
             wrapper.style.backgroundSize = '600px 600px';
+            ring.style.backgroundImage         = 'url("../img/ring.svg")';
         } else if (startPosition >= 180 && startPosition < 270) {
             wrapper.style.background = 'center no-repeat url("img/day.png")';
             wrapper.style.backgroundSize = '600px 600px';
+            ring.style.backgroundImage         = 'url("../img/ring.svg")';
         } else if (startPosition >= 270 && startPosition < 359) {
             wrapper.style.background = 'center no-repeat url("img/evening.png")';
             wrapper.style.backgroundSize = '600px 600px';
+            ring.style.backgroundImage         = 'url("../img/ring_bright.svg")';
         } else {
             wrapper.style.background = 'center no-repeat url("img/night.png")';
             wrapper.style.backgroundSize = '600px 600px';
+            ring.style.backgroundImage         = 'url("../img/ring_bright.svg")';
         }
     }
 
