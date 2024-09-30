@@ -100,14 +100,10 @@
     //----------------------------------------------------------
 
     const ring       = document.querySelector('.ring');
-    const startEndBox       = document.querySelector('.start_end');
     const durationBox       = document.querySelector('.duration');
-
-
+    const startEndBoxes = document.querySelectorAll('.start_end');
     const minuteMarks = document.querySelectorAll('.minute-mark');
-    minuteMarks.forEach(mark => {
-        mark.style.backgroundColor = 'rgba(255, 255, 255, 0.35)';
-    });
+
 
 
     // Funktion zum Aktualisieren des Hintergrundbilds basierend auf dem Startwinkel
@@ -123,12 +119,28 @@
             minuteMarks.forEach(mark => {
                 mark.style.backgroundColor = 'rgba(255, 255, 255, 0.35)';
             });
+            durationBox.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            });
+            durationBox.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
+            });
         } else if (startPosition >= 90 && startPosition < 180) {
             wrapper.style.background = 'center no-repeat url("img/morning.png")';
             wrapper.style.backgroundSize = '600px 600px';
             ring.style.backgroundImage         = 'url("img/ring.svg")';
             minuteMarks.forEach(mark => {
                 mark.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+            });
+            durationBox.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            });
+            durationBox.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
             });
         } else if (startPosition >= 180 && startPosition < 270) {
             wrapper.style.background = 'center no-repeat url("img/day.png")';
@@ -138,7 +150,13 @@
                 mark.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
             });
             durationBox.style.backgroundColor = 'rgba(0,0,0,0.2)';
-            startEndBox.style.backgroundColor = 'rgba(0,0,0,0.2)';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.backgroundColor = 'rgba(0,0,0,0.2)';
+            });
+            durationBox.style.border = 'rgba(0,0,0,0.25)'+'solid 1px';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.border = 'rgba(0,0,0,0.25)'+'solid 1px';
+            });
         } else if (startPosition >= 270 && startPosition < 359) {
             wrapper.style.background = 'center no-repeat url("img/evening.png")';
             wrapper.style.backgroundSize = '600px 600px';
@@ -146,12 +164,28 @@
             minuteMarks.forEach(mark => {
                 mark.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
             });
+            durationBox.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            });
+            durationBox.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
+            });
         } else {
             wrapper.style.background = 'center no-repeat url("img/night.png")';
             wrapper.style.backgroundSize = '600px 600px';
             ring.style.backgroundImage         = 'url("img/ring_bright.svg")';
             minuteMarks.forEach(mark => {
                 mark.style.backgroundColor = 'rgba(255, 255, 255, 0.35)';
+            });
+            durationBox.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            });
+            durationBox.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
+            startEndBoxes.forEach(start_end => {
+                start_end.style.border = 'rgba(255,255,255,0.25)'+'solid 1px';
             });
         }
     }
